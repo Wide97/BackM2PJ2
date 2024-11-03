@@ -55,4 +55,13 @@ public class ViaggioController {
         return ResponseEntity.ok(assegnazione);
     }
 
+    @PutMapping("/{viaggioId}/stato")
+    public ResponseEntity<Viaggio> aggiornaStato(
+            @PathVariable Long viaggioId,
+            @RequestParam String nuovoStato) {
+        Viaggio viaggioAggiornato = viaggioService.aggiornaStato(viaggioId, nuovoStato);
+        return ResponseEntity.ok(viaggioAggiornato);
+    }
+
+
 }

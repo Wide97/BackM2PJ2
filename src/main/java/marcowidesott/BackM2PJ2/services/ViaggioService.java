@@ -64,4 +64,10 @@ public class ViaggioService {
         return assegnazioneRepository.save(assegnazione);
     }
 
+    public Viaggio aggiornaStato(Long viaggioId, String nuovoStato) {
+        Viaggio viaggio = getViaggioById(viaggioId);
+        viaggio.setStato(nuovoStato);
+        return viaggioRepository.save(viaggio);
+    }
+
 }

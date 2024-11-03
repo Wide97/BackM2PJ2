@@ -20,11 +20,13 @@ public class Dipendente {
     private String nome;
     private String cognome;
     private String email;
+    private String fotoProfilo;
 
-    public Dipendente(String email, String cognome, String nome, String username) {
+    public Dipendente(String email, String cognome, String nome, String username, String fotoProfilo) {
         this.email = email;
         this.cognome = cognome;
         this.nome = nome;
         this.username = username;
+        this.fotoProfilo = fotoProfilo;
     }
 }
