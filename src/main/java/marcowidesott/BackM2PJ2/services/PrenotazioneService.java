@@ -23,27 +23,6 @@ public class PrenotazioneService {
     @Autowired
     private ViaggioService viaggioService;
 
-    // Metodo per creare una nuova prenotazione
-    public Prenotazione creaPrenotazione(Long dipendenteId, Long viaggioId, LocalDate dataRichiesta, String note) {
-        Dipendente dipendente = dipendenteService.getDipendenteById(dipendenteId);
-        Viaggio viaggio = viaggioService.getViaggioById(viaggioId);
-
-        // Verifica che non ci sia già una prenotazione per lo stesso dipendente e data
-        List<Prenotazione> prenotazioniEsistenti = prenotazioneRepository
-                .findByDipendenteAndDataRichiesta(dipendente, dataRichiesta);
-
-        if (!prenotazioniEsistenti.isEmpty()) {
-            throw new PrenotazioneNonValidaException("Il dipendente ha già una prenotazione per questa data.");
-        }
-
-        Prenotazione prenotazione = new Prenotazione();
-        prenotazione.setDipendente(dipendente);
-        prenotazione.setViaggio(viaggio);
-        prenotazione.setDataRichiesta(dataRichiesta);
-        prenotazione.setNote(note);
-
-        return prenotazioneRepository.save(prenotazione);
-    }
 
     // Metodo per recuperare tutte le prenotazioni
     public List<Prenotazione> getAllPrenotazioni() {
@@ -55,5 +34,25 @@ public class PrenotazioneService {
         Prenotazione prenotazione = prenotazioneRepository.findById(id)
                 .orElseThrow(() -> new PrenotazioneNonValidaException("Prenotazione non trovata"));
         prenotazioneRepository.delete(prenotazione);
+    }
+
+    public Prenotazione creaPrenotazione(Long dipendenteId, Long viaggioId, LocalDate dataRichiesta, String note) {
+        Dipendente dipendente = dipendenteService.getDipendenteById(dipendenteId);
+        Viaggio viaggio = viaggioService.getViaggioById(viaggioId);
+
+        boolean esistePrenotazione = prenotazioneRepository
+                .existsByDipendenteAndDataRichiesta(dipendente, dataRichiesta);
+
+        if (esistePrenotazione) {
+            throw new PrenotazioneNonValidaException("Il dipendente ha già una prenotazione per questa data.");
+        }
+
+        Prenotazione prenotazione = new Prenotazione();
+        prenotazione.setDipendente(dipendente);
+        prenotazione.setViaggio(viaggio);
+        prenotazione.setDataRichiesta(dataRichiesta);
+        prenotazione.setNote(note);
+
+        return prenotazioneRepository.save(prenotazione);
     }
 }
