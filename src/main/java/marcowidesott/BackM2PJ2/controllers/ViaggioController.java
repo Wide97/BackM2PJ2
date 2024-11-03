@@ -1,5 +1,6 @@
 package marcowidesott.BackM2PJ2.controllers;
 
+import marcowidesott.BackM2PJ2.entities.Assegnazione;
 import marcowidesott.BackM2PJ2.entities.Viaggio;
 import marcowidesott.BackM2PJ2.services.ViaggioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +46,13 @@ public class ViaggioController {
         viaggioService.eliminaViaggio(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{viaggioId}/assegna-dipendente/{dipendenteId}")
+    public ResponseEntity<Assegnazione> assegnaDipendente(
+            @PathVariable Long viaggioId,
+            @PathVariable Long dipendenteId) {
+        Assegnazione assegnazione = viaggioService.assegnaDipendente(viaggioId, dipendenteId);
+        return ResponseEntity.ok(assegnazione);
+    }
+
 }

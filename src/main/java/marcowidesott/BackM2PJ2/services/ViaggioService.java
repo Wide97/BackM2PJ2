@@ -1,7 +1,10 @@
 package marcowidesott.BackM2PJ2.services;
 
+import marcowidesott.BackM2PJ2.entities.Assegnazione;
+import marcowidesott.BackM2PJ2.entities.Dipendente;
 import marcowidesott.BackM2PJ2.entities.Viaggio;
 import marcowidesott.BackM2PJ2.exceptions.ViaggioNonTrovatoException;
+import marcowidesott.BackM2PJ2.repositories.AssegnazioneRepository;
 import marcowidesott.BackM2PJ2.repositories.ViaggioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,12 @@ public class ViaggioService {
 
     @Autowired
     private ViaggioRepository viaggioRepository;
+
+    @Autowired
+    private DipendenteService dipendenteService;
+
+    @Autowired
+    private AssegnazioneRepository assegnazioneRepository;
 
     // Metodo per creare un nuovo viaggio
     public Viaggio creaViaggio(Viaggio viaggio) {
@@ -44,4 +53,15 @@ public class ViaggioService {
         Viaggio viaggio = getViaggioById(id);
         viaggioRepository.delete(viaggio);
     }
+
+    // Metodo per assegnare un dipendente a un viaggio
+    public Assegnazione assegnaDipendente(Long viaggioId, Long dipendenteId) {
+        Viaggio viaggio = viaggioRepository.findById(viaggioId)
+                .orElseThrow(() -> new ViaggioNonTrovatoException(viaggioId));
+        Dipendente dipendente = dipendenteService.getDipendenteById(dipendenteId);
+
+        Assegnazione assegnazione = new Assegnazione(dipendente, viaggio);
+        return assegnazioneRepository.save(assegnazione);
+    }
+
 }
